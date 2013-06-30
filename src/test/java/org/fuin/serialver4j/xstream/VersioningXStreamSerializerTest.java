@@ -1,0 +1,93 @@
+/**
+ * Copyright (C) 2009 Future Invent Informationsmanagement GmbH. All rights
+ * reserved. <http://www.fuin.org/>
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 3 of the License, or (at your option) any
+ * later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this library. If not, see <http://www.gnu.org/licenses/>.
+ */
+package org.fuin.serialver4j.xstream;
+
+import static org.fest.assertions.Assertions.assertThat;
+
+import java.io.File;
+import java.io.IOException;
+
+import my.test.Address;
+
+import org.fuin.serialver4j.base.AbstractTestBase;
+import org.fuin.serialver4j.base.ClassesHistory;
+import org.fuin.serialver4j.base.DeserializationException;
+import org.fuin.serialver4j.base.VersioningSerializer;
+import org.fuin.serialver4j.xstream.VersioningXStreamSerializer;
+import org.junit.Test;
+
+import com.thoughtworks.xstream.XStream;
+
+//TESTCODE:BEGIN
+public class VersioningXStreamSerializerTest extends AbstractTestBase {
+
+    @Override
+    protected final VersioningSerializer createVersioningSerializer(final ClassesHistory history) {
+        final XStream xstream = new XStream();
+        return new VersioningXStreamSerializer(history, xstream, 512);
+    }
+
+    @Test
+    public final void testDeserializeXStreamV1() throws IOException, DeserializationException {
+        final File file = new File(DATA_DIR, "AddressV1-xstream.xml");
+        final Address result = read(file);
+        assertThat(result.getId()).isEqualTo(100000);
+        assertThat(result.getFirstName()).isEqualTo("John");
+        assertThat(result.getLastName()).isEqualTo("Doe");
+    }
+
+    @Test
+    public final void testDeserializeXStreamV2() throws IOException, DeserializationException {
+        final File file = new File(DATA_DIR, "AddressV2-xstream.xml");
+        final Address result = read(file);
+        assertThat(result.getId()).isEqualTo(100000);
+        assertThat(result.getFirstName()).isEqualTo("John");
+        assertThat(result.getLastName()).isEqualTo("Doe");
+    }
+
+    @Test
+    public final void testDeserializeXStreamV3() throws IOException, DeserializationException {
+        final File file = new File(DATA_DIR, "AddressV3-xstream.xml");
+        final Address result = read(file);
+        assertThat(result.getId()).isEqualTo(1);
+        assertThat(result.getFirstName()).isEqualTo("John");
+        assertThat(result.getLastName()).isEqualTo("Doe");
+    }
+
+    /**
+     * Creates the current version of the serialized files.
+     * 
+     * @param args
+     *            Not used.
+     * 
+     * @throws IOException
+     *             The usual suspects of I/O problems.
+     */
+    public static void main(final String[] args) throws IOException {
+
+        final Address address = new Address(1, "John", "Doe");
+        final File file = new File(DATA_DIR, "AddressV3-xstream.xml");
+        final XStream xstream = new XStream();
+        write(file, address, new VersioningXStreamSerializer(readHistory(), xstream, 512));
+
+        System.out.println("Written successfully: " + file);
+
+    }
+
+}
+// TESTCODE:END

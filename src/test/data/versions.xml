@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<history versionTag="versionUID">
+  <class package="my.test" name="Address">
+    <version>
+      <serialVersionUID>-7393761964342362874</serialVersionUID>
+      <oldClass>my.test.old.address.v1.Address</oldClass>
+      <converterClass>my.test.old.address.v1.AddressConverter</converterClass>
+    </version>
+    <version>
+      <serialVersionUID>-2466841694916192299</serialVersionUID>
+      <oldClass>my.test.old.address.v2.Address</oldClass>
+      <converterClass>my.test.old.address.v2.AddressConverter</converterClass>
+    </version>
+  </class>
+</history>
